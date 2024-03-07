@@ -20,7 +20,7 @@ const CurrentTime = dynamic(() => import('@/components/atoms/currentTime'), { ss
 export default function Home() {
 
   const mobile = useMediaQuery('(max-width: 480px)')
-  const { pendingSpeech } = useLoading();
+  const { pendingCovert, pendingSpeech } = useLoading();
   const { aboutPage } = useAbout();
   const [mp3File, setMp3File] = useState<string | null>(null);
   const [file, setFile] = useState<Blob | null>(null);
@@ -46,7 +46,7 @@ export default function Home() {
       setShowGenerate(true);
     },
     onError: (error) => {
-      alert("Error accessing microphone:" + error.message);
+      toast.error("Error accessing microphone:" + error.message);
     }
   });
 
@@ -66,7 +66,7 @@ export default function Home() {
         audioRef.current.play();
       }
     } catch (error) {
-      alert(error);
+      toast.error(`${error}`);
     }
   }, [file]);
 
@@ -86,34 +86,43 @@ export default function Home() {
 
   return (
     <div>
-      {aboutPage ? <About />:
+      {aboutPage ? <About /> :
         <>
           <div className="flex space-x-2 items-center justify-start px-6 mt-4 md:mt-6">
-            <audio ref={audioRef}controls className="h-10" src={mp3File ?? ''} />
-            <Button
-              className="bg-main hover:bg-main/90 rounded-full h-10"
-              onClick={generateSpeech}
-              disabled={pendingSpeech || !showGenerate}>
-              {pendingSpeech ?
-                <Loader2 className="animate-spin" /> :
-                <FileText className="mr-2 w-4 h-4" />
-              }
-              <p className="text-xs">
-                {pendingSpeech ? '' : 'Click To Generate Text'}
-              </p>
-            </Button>
+            {pendingCovert ?
+              <div className="flex items-center space-x-2 text-white">
+                <Loader2 className="animate-spin " />
+                <p className="text-xs">Converting audio to mp3...</p>
+              </div>
+              :
+              <>
+                <audio ref={audioRef} controls className="h-10" src={mp3File ?? ''} />
+                <Button
+                  className="bg-main hover:bg-main/90 rounded-full h-10"
+                  onClick={generateSpeech}
+                  disabled={pendingSpeech || !showGenerate}>
+                  {pendingSpeech ?
+                    <Loader2 className="animate-spin" /> :
+                    <FileText className="mr-2 w-4 h-4" />
+                  }
+                  <p className="text-xs">
+                    {pendingSpeech ? '' : 'Click To Generate Text'}
+                  </p>
+                </Button>
+              </>
+            }
           </div>
           <div className="flex flex-col">
             <div className="h-[60vh] lg:h-[50vh] text-white py-10 px-10 flex-col flex items-start justify-start md:items-center md:justify-center overflow-y-auto">
               <p className={`text-base md:text-xl text-left max-w-6xl leading-loose break-words selection:text-main ${copyTextColor ? 'text-main' : ''}`}>
                 {pendingSpeech ? 'waiting for generate text...' :
                   speech && !mediaRecorder && !showGenerate ?
-                  <TypeAnimation
-                    style={{lineHeight: '1.8'}}
-                    sequence={[`${speech}`]}
-                    speed={75}
-                  />
-                  : null
+                    <TypeAnimation
+                      style={{ lineHeight: '1.8' }}
+                      sequence={[`${speech}`]}
+                      speed={75}
+                    />
+                    : null
                 }
                 {mediaRecorder && isRecording && (
                   <LiveAudioVisualizer
@@ -125,11 +134,11 @@ export default function Home() {
                 )}
               </p>
             </div>
-            <div className="fixed bottom-0 w-full py-5">
+            <div className="absolute bottom-0 w-full py-5">
               <div className="grid grid-cols-1 lg:grid-cols-3 items-end px-6">
                 <CurrentTime type="dateTime" />
                 <div className="px-2 py-2 pb-3 bg-main/20 backdrop-blur-sm rounded-full" >
-                  <div className="gap-0 items-center grid grid-cols-3 relative">
+                  <div className="gap-0 items-center grid grid-cols-3 ">
                     <div className="pt-1">
                       <label htmlFor="file-upload" className="flex flex-col items-center text-main space-y-2 cursor-pointer hover:scale-105 transition-all duration-500">
                         <UploadCloud />
@@ -138,7 +147,6 @@ export default function Home() {
                       <input
                         type="file"
                         accept="audio/*"
-                        capture="environment"
                         id="file-upload"
                         className="hidden"
                         onChange={handleFile}

@@ -8,10 +8,6 @@ const CurrentTime = dynamic(() => import('@/components/atoms/currentTime'), { ss
 
 
 const About = () => {
-
-  const about = [
-    
-  ]
   const { setAboutPage } = useAbout();
   return (
     <div className="flex flex-col items-start justify-center h-[60vh]">
@@ -23,7 +19,7 @@ const About = () => {
           Feel free to explore Ryuk Generate and make use of its conveniences. Happy generating!
         </p>
       </div>
-      <div className="fixed bottom-0 w-full py-5">
+      <div className="absolute bottom-0 w-full py-5">
         <div className="grid grid-cols-1 lg:grid-cols-3 items-end px-6">
           <CurrentTime type="dateTime" />
           <Button onClick={() => setAboutPage(false)} className="text-main px-2 py-2 pb-3 bg-main/20 backdrop-blur-sm rounded-full flex justify-center transition-all hover:scale-105 duration-500 hover:bg-main/20" >
