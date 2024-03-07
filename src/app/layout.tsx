@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import Header from "@/components/layout/header";
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
+import { mainFont } from '@/lib/font';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={mainFont.className} >
+        <div className="relative">
+          <div className="fixed inset-0 z-0 bg-black/70 py-10">
+            <div className="container mx-auto z-50">
+              <div className="animate-border relative border-2 h-[90vh] rounded-md border-main/50 bg-black/50 backdrop-blur-md pb-4">
+              <Header />
+                {children}
+              </div>
+            </div>
+          </div>
+        </div>
+        <SonnerToaster richColors position="top-right" />
+      </body>
     </html>
   );
 }

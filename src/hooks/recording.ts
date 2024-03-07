@@ -2,19 +2,24 @@ import { useState, useRef } from 'react';
 
 interface RecordingState {
   isRecording: boolean;
-  recordedBlob: Blob | null;
 }
 
 interface UseRecordingProps {
   onRecordingStart?: (recorder: MediaRecorder, chunksRef: React.MutableRefObject<Blob[]>) => void;
-  onRecordingStop?: (blob: Blob) => void;
+  stopRecording?: () => void; // Include stopRecording in UseRecordingProps
   onError?: (error: Error) => void;
 }
 
-const useRecording = ({ onRecordingStart, onRecordingStop, onError }: UseRecordingProps) => {
+interface UseRecordingResult {
+  isRecording: boolean;
+  startRecording: () => void;
+  stopRecording: () => void;
+  mediaRecorder: MediaRecorder | null;
+}
+
+const useRecording = ({ onRecordingStart, stopRecording, onError }: UseRecordingProps): UseRecordingResult => {
   const [recordingState, setRecordingState] = useState<RecordingState>({
     isRecording: false,
-    recordedBlob: null,
   });
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -36,7 +41,7 @@ const useRecording = ({ onRecordingStart, onRecordingStop, onError }: UseRecordi
 
         recorder.start();
 
-        setRecordingState({ isRecording: true, recordedBlob: null });
+        setRecordingState({ isRecording: true });
       })
       .catch(error => {
         console.error("Error accessing microphone:", error);
@@ -44,21 +49,27 @@ const useRecording = ({ onRecordingStart, onRecordingStop, onError }: UseRecordi
       });
   };
 
-  const stopRecording = () => {
+  const stopRecordingInternal = () => {
     if (mediaRecorder.current && mediaRecorder.current.state !== 'inactive') {
       mediaRecorder.current.stop();
-      setRecordingState(prevState => ({
-        ...prevState,
-        isRecording: false
-      }));
+      mediaRecorder.current = null;
+      setRecordingState({ isRecording: false });
+      chunksRef.current = [];
+    }
+  };
+
+  const stopRecordingWrapper = () => {
+    stopRecordingInternal();
+    if (stopRecording) {
+      stopRecording(); // Call stopRecording callback if provided
     }
   };
 
   return {
     isRecording: recordingState.isRecording,
-    recordedBlob: recordingState.recordedBlob,
     startRecording,
-    stopRecording,
+    stopRecording: stopRecordingWrapper, // Return the wrapper function
+    mediaRecorder: mediaRecorder.current,
   };
 };
 
