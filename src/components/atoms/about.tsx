@@ -27,7 +27,7 @@ const About = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 items-end px-6">
           <CurrentTime type="dateTime" />
           <Button onClick={() => setAboutPage(false)} className="text-main px-2 py-2 pb-3 bg-main/20 backdrop-blur-sm rounded-full flex justify-center transition-all hover:scale-105 duration-500 hover:bg-main/20" >
-            let&apos;s generate!
+            {" let's generate!"}
           </Button>
           <CurrentTime type="date" />
         </div>
