@@ -25,13 +25,13 @@ const CurrentTime = ({ type }: CurrentTimeProps) => {
   return (
     <>
       {type === "dateTime" &&
-        <div className="text-white hidden md:block ">
+        <div className="text-white hidden lg:block ">
           <p>{dateTime}</p>
         </div>
       }
       {type === "date" &&
       <div className="text-white flex justify-center lg:justify-end">
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <p>{date}</p>
         </div>
       </div>

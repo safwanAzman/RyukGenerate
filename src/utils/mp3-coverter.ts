@@ -1,5 +1,6 @@
 import { useLoading } from '@/hooks/loading';
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile } from '@ffmpeg/util';
 
 interface FileConversionParams {
   file: File;
@@ -7,21 +8,22 @@ interface FileConversionParams {
   setMp3File: (url: string) => void;
 }
 
-export const mp3Converter = ({ file, setFile, setMp3File }: FileConversionParams): void => {
+export const mp3Converter = async ({ file, setFile, setMp3File }: FileConversionParams): Promise<void> => {
   const setPendingCovert = useLoading.getState().setPendingCovert;
-  const ffmpeg = createFFmpeg({
-    corePath: 'https://unpkg.com/@ffmpeg/core@0.10.0/dist/ffmpeg-core.js',
-    log: false,
-  });
+  const ffmpeg = new FFmpeg();
   setPendingCovert(true);
-  ffmpeg.load().then(async () => {
-    ffmpeg.FS('writeFile', 'input-file', await fetchFile(file));
-    await ffmpeg.run('-i', 'input-file', '-codec:a', 'libmp3lame', 'output.mp3');
-
-    const data = ffmpeg.FS('readFile', 'output.mp3');
-    const blob = new Blob([data.buffer], { type: 'audio/mp3' });
-    setFile(blob);
-    setMp3File(URL.createObjectURL(blob));
-    setPendingCovert(false);
-  });
+  
+  await ffmpeg.load();
+  const fileDataPromise = fetchFile(file);
+  const fileData = await fileDataPromise;
+  await ffmpeg.writeFile('input-file', fileData);
+  await ffmpeg.exec(['-i', 'input-file', '-codec:a', 'libmp3lame', 'output.mp3']);
+  
+  const mp3Data = ffmpeg.readFile('output.mp3');
+  const mp3Blob = new Blob([await mp3Data], { type: 'audio/mp3' });
+  
+  setFile(mp3Blob);
+  setMp3File(URL.createObjectURL(mp3Blob));
+  
+  setPendingCovert(false);
 };

@@ -71,8 +71,14 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    width: 100vw;
-    height: 100vh;
+    @apply bg-black/70 text-foreground;
   }
+}
+
+.animate-speech{
+  @apply animate-border rounded-lg from-main/50 via-main  to-main/90 shadow-lg shadow-main bg-[length:_400%_400%] p-0 [animation-duration:_6s]  bg-gradient-to-r
+}
+
+.main-container{
+  @apply relative border-2 border-main h-[43rem] lg:h-[46rem] rounded-md border-main/50  backdrop-blur-md 
 }

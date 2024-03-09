@@ -4,9 +4,9 @@ import {GithubIcon, MessageSquare } from "lucide-react";
 import Link from "next/link";
 
 const Header = () => {
-  const { setAboutPage } = useAbout();
+  const { setAboutPage , aboutPage } = useAbout();
   return (
-    <header className="flex items-center justify-between px-6 py-4">
+    <header className={`flex items-center justify-between px-6 py-4 z-50 ${aboutPage ? 'absolute w-full' : ''}`}>
       <button onClick={() => setAboutPage(false)}>
         <h1 className="font-bold text-white text-lg">RYUK-<span className="text-main">GENERATE</span></h1>
       </button>

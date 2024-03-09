@@ -14,8 +14,8 @@ import dynamic from 'next/dynamic';
 import { copyToClipboard } from "@/utils/copyToClipboard";
 import { toast } from "sonner"
 import { useAbout } from "@/hooks/about";
-import About from "@/components/atoms/about";
-const CurrentTime = dynamic(() => import('@/components/atoms/currentTime'), { ssr: false });
+import About from "@/components/about";
+const CurrentTime = dynamic(() => import('@/components/currentTime'), { ssr: false });
 
 export default function Home() {
 
@@ -113,7 +113,16 @@ export default function Home() {
             }
           </div>
           <div className="flex flex-col">
-            <div className="h-[60vh] lg:h-[50vh] text-white py-10 px-10 flex-col flex items-start justify-start md:items-center md:justify-center overflow-y-auto">
+            <div className="h-[60vh] lg:h-[25rem] text-white py-10 px-10 flex-col flex items-start justify-start md:items-center md:justify-center overflow-y-auto">
+              {!mediaRecorder && !isRecording && !speech && !mp3File && !pendingCovert && (
+                <p className="text-sm md:text-xl pt-4 text-center max-w-xl selection:text-main">
+                  <TypeAnimation
+                    style={{ lineHeight: '1.8' }}
+                    sequence={[`Upload an audio file or click on the microphone to start recording your voice. After that, click on the microphone to stop recording and generate the text.`]}
+                    speed={75}
+                  />
+                </p>
+              )}
               <p className={`text-base md:text-xl text-left max-w-6xl leading-loose break-words selection:text-main ${copyTextColor ? 'text-main' : ''}`}>
                 {pendingSpeech ? 'waiting for generate text...' :
                   speech && !mediaRecorder && !showGenerate ?
@@ -137,7 +146,7 @@ export default function Home() {
             <div className="absolute bottom-0 w-full py-5">
               <div className="grid grid-cols-1 lg:grid-cols-3 items-end px-6">
                 <CurrentTime type="dateTime" />
-                <div className="px-2 py-2 pb-3 bg-main/20 backdrop-blur-sm rounded-full" >
+                <div className="px-2 py-2 pb-3 bg-main/20 backdrop-blur-sm rounded-full " >
                   <div className="gap-0 items-center grid grid-cols-3 ">
                     <div className="pt-1">
                       <label htmlFor="file-upload" className="flex flex-col items-center text-main space-y-2 cursor-pointer hover:scale-105 transition-all duration-500">
