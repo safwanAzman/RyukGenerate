@@ -15,7 +15,7 @@ const Header = () => {
           <MessageSquare className="w-4 h-4 mr-1" />
           <p>About</p>
         </button>
-        <Link href="/" target="_blank" className="flex items-center  text-white text-xs md:text-sm hover:text-main">
+        <Link href="https://github.com/safwanAzman/RyukGenerate" target="_blank" className="flex items-center  text-white text-xs md:text-sm hover:text-main">
           <GithubIcon className="w-4 h-4 mr-1" />
           <p>Github</p>
         </Link>
