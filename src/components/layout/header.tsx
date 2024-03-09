@@ -11,7 +11,7 @@ const Header = () => {
         <h1 className="font-bold text-white text-lg">RYUK-<span className="text-main">GENERATE</span></h1>
       </button>
       <div className="flex items-center space-x-2 md:space-x-5">
-        <button onClick={() => setAboutPage(true)} className="flex items-center  text-white text-xs md:text-sm hover:text-main">
+        <button onClick={() => setAboutPage(true)} className={`flex items-center  text-xs md:text-sm hover:text-main ${aboutPage ? 'text-main' : 'text-white'}`}>
           <MessageSquare className="w-4 h-4 mr-1" />
           <p>About</p>
         </button>
