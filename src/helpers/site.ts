@@ -7,7 +7,7 @@ export const siteConfig: SiteConfig = {
     This web application uses Hugging Face openai/whisper-large-v3 model to translate audio to text.
     Feel free to explore Ryuk Generate and make use of its conveniences. Happy generating!`,
     url: `https://ryuk-generate.vercel.app/`,
-    ogImage: `https://ucarecdn.com/5e404a94-a135-4826-b56b-c0613af9a04e/og.jpeg`,
+    ogImage: `https://ucarecdn.com/731161ea-f03c-4cea-8009-2cfb320c721b/og.jpg`,
     name:'SafwanAzman',
     links: {
         github: 'https://github.com/safwanAzman',
